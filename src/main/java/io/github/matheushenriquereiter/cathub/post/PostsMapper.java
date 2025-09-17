@@ -14,6 +14,7 @@ public class PostsMapper {
                 post.getDescription(),
                 new UserResponse(
                         user.getId(),
+                        user.getEmail(),
                         user.getUsername()
                 ));
     }

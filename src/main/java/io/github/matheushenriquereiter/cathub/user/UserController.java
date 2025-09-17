@@ -1,62 +1,61 @@
 package io.github.matheushenriquereiter.cathub.user;
 
-import io.github.matheushenriquereiter.cathub.post.Post;
-import io.github.matheushenriquereiter.cathub.post.PostResponse;
-import io.github.matheushenriquereiter.cathub.post.PostsMapper;
-import jakarta.validation.Valid;
+import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping
 public class UserController {
-    private final UserRepository userRepository;
-    private final PostsMapper postsMapper;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository, PostsMapper postsMapper) {
-        this.userRepository = userRepository;
-        this.postsMapper = postsMapper;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("/users")
-    public List<UserResponse> getUser() {
-        List<User> users = userRepository.findAll();
-
-        return users.stream().map((user) -> new UserResponse(user.getId(), user.getUsername())).toList();
-    }
-
-    @GetMapping("/users/{id}")
-    public UserResponse getUser(@PathVariable Integer id) {
-        Optional<User> user = userRepository.findById(id);
-
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "User not exists");
-        }
-
-        return new UserResponse(user.get().getId(), user.get().getUsername());
+    @PostMapping("/users/login")
+    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
+        RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @PostMapping("/users")
-    public UserResponse insertUser(@RequestBody @Valid UserRequest user) {
-        User newUser = userRepository.save(new User(user.username(), user.password()));
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
+        validateCreateUserDto(createUserDto);
+        userService.createUser(createUserDto);
 
-        return new UserResponse(newUser.getId(), newUser.getUsername());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/{id}/post")
-    public List<PostResponse> getUserPosts(@PathVariable Integer id) {
-        Optional<User> user = userRepository.findById(id);
+    @GetMapping("/users/test")
+    public ResponseEntity<String> getAuthenticationTest() {
+        return new ResponseEntity<>("Autenticado com sucesso", HttpStatus.OK);
+    }
 
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "User not exists");
+    @GetMapping("/users/test/customer")
+    public ResponseEntity<String> getCustomerAuthenticationTest() {
+        return new ResponseEntity<>("Cliente autenticado com sucesso", HttpStatus.OK);
+    }
+
+    @GetMapping("/users/test/administrator")
+    public ResponseEntity<String> getAdminAuthenticationTest() {
+        return new ResponseEntity<>("Administrador autenticado com sucesso", HttpStatus.OK);
+    }
+
+    private void validateCreateUserDto(CreateUserDto createUserDto) {
+        if (createUserDto.username() == null || createUserDto.username().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'username' field is required and cannot be blank.");
         }
 
-        List<Post> posts = user.get().getPosts();
+        if (createUserDto.email() == null || createUserDto.email().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'email' field is required and cannot be blank.");
+        }
 
-        return posts.stream().map(postsMapper::toResponse).toList();
+        if (createUserDto.password() == null || createUserDto.password().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'password' field is required and cannot be blank.");
+        }
     }
 }

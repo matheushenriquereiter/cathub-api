@@ -1,8 +1,8 @@
 package io.github.matheushenriquereiter.cathub.user;
 
-public record UserResponse(
-        Integer id,
+public record CreateUserDto(
+        String username,
         String email,
-        String username
+        String password
 ) {
 }
