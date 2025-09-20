@@ -1,22 +1,24 @@
 package io.github.matheushenriquereiter.cathub.post;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
 public class PostController {
     private final PostsRepository postsRepository;
+    private final PostsMapper postsMapper;
 
-    public PostController(PostsRepository postsRepository) {
+    public PostController(PostsRepository postsRepository, PostsMapper postsMapper) {
         this.postsRepository = postsRepository;
+        this.postsMapper = postsMapper;
     }
 
     @GetMapping("/posts")
-    public List<Post> getPosts() {
-        return postsRepository.findAll();
+    public Page<PostResponse> getPosts(Pageable pageable) {
+        return postsRepository.findAll(pageable).map(postsMapper::toResponse);
     }
 }
