@@ -3,10 +3,12 @@ package io.github.matheushenriquereiter.cathub.user;
 import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -19,22 +21,33 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
     @PostMapping("/users/login")
     public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
         validateLoginUserDto(loginUserDto);
-        RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
 
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        try {
+            RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
+
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        } catch (AuthenticationException authenticationException) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token not associated with a valid user.");
+        }
     }
 
     @PostMapping("/users")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
         validateCreateUserDto(createUserDto);
+
+        boolean usernameTaken = userRepository.existsByUsername(createUserDto.username());
+        if (usernameTaken) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already taken.");
+        }
+
+        boolean emailTaken = userRepository.existsByEmail(createUserDto.email());
+        if (emailTaken) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already taken.");
+        }
+
         userService.createUser(createUserDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);

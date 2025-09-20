@@ -1,4 +1,5 @@
 package io.github.matheushenriquereiter.cathub.auth;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -27,7 +28,7 @@ public class JwtTokenService {
                     .withExpiresAt(expirationDate()) // Define a data de expiração do token
                     .withSubject(user.getUsername()) // Define o assunto do token (neste caso, o nome de usuário)
                     .sign(algorithm); // Assina o token usando o algoritmo especificado
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new JWTCreationException("Erro ao gerar token.", exception);
         }
     }
@@ -41,8 +42,8 @@ public class JwtTokenService {
                     .build()
                     .verify(token) // Verifica a validade do token
                     .getSubject(); // Obtém o assunto (neste caso, o nome de usuário) do token
-        } catch (JWTVerificationException exception){
-            throw new JWTVerificationException("Token inválido ou expirado.");
+        } catch (JWTVerificationException exception) {
+            throw new JWTVerificationException("Invalid authentication token.");
         }
     }
 
@@ -53,5 +54,4 @@ public class JwtTokenService {
     private Instant expirationDate() {
         return ZonedDateTime.now(ZoneId.of("America/Recife")).plusHours(4).toInstant();
     }
-
 }
