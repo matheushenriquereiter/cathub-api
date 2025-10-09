@@ -14,6 +14,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
+    private String imagePath;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
