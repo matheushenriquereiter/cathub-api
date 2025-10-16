@@ -1,6 +1,7 @@
 package io.github.matheushenriquereiter.cathub.user;
 
 import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -37,25 +38,10 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
-        validateCreateUserDto(createUserDto);
+    public ResponseEntity<Void> createUser(@RequestBody @Valid CreateUserDto createUserDto) {
         userService.createUser(createUserDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    private void validateCreateUserDto(CreateUserDto createUserDto) {
-        if (createUserDto.username() == null || createUserDto.username().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'username' field is required and cannot be blank.");
-        }
-
-        if (createUserDto.email() == null || createUserDto.email().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'email' field is required and cannot be blank.");
-        }
-
-        if (createUserDto.password() == null || createUserDto.password().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'password' field is required and cannot be blank.");
-        }
     }
 
     private void validateLoginUserDto(LoginUserDto loginUserDto) {
