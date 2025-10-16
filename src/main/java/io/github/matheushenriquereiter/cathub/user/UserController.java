@@ -14,21 +14,13 @@ import java.util.List;
 @RequestMapping
 public class UserController {
     private final UserService userService;
-    private final UserRepository userRepository;
 
-    public UserController(UserService userService, UserRepository userRepository) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
-    }
-
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
     }
 
     @PostMapping("/users/login")
     public RecoveryJwtTokenDto authenticateUser(@RequestBody @Valid LoginUserDto loginUserDto) {
-
         try {
             return userService.authenticateUser(loginUserDto);
         } catch (AuthenticationException error) {
