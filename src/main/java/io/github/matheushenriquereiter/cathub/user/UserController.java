@@ -27,8 +27,7 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-    public RecoveryJwtTokenDto authenticateUser(@RequestBody LoginUserDto loginUserDto) {
-        validateLoginUserDto(loginUserDto);
+    public RecoveryJwtTokenDto authenticateUser(@RequestBody @Valid LoginUserDto loginUserDto) {
 
         try {
             return userService.authenticateUser(loginUserDto);
@@ -42,16 +41,6 @@ public class UserController {
         userService.createUser(createUserDto);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    private void validateLoginUserDto(LoginUserDto loginUserDto) {
-        if (loginUserDto.email() == null || loginUserDto.email().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'email' field is required and cannot be blank.");
-        }
-
-        if (loginUserDto.password() == null || loginUserDto.password().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'password' field is required and cannot be blank.");
-        }
     }
 }
 
