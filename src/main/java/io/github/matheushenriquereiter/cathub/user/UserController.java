@@ -3,6 +3,7 @@ package io.github.matheushenriquereiter.cathub.user;
 import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,11 +26,14 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
+    public RecoveryJwtTokenDto authenticateUser(@RequestBody LoginUserDto loginUserDto) {
         validateLoginUserDto(loginUserDto);
-        RecoveryJwtTokenDto token = userService.authenticateUser(loginUserDto);
 
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        try {
+            return userService.authenticateUser(loginUserDto);
+        } catch (AuthenticationException error) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not exists");
+        }
     }
 
     @PostMapping("/users")
@@ -45,18 +49,8 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'username' field is required and cannot be blank.");
         }
 
-        if (createUserDto.username().length() < 5 || createUserDto.username().length() > 20) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The username length must be between 5 and 20 characters.");
-        }
-
         if (createUserDto.email() == null || createUserDto.email().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The 'email' field is required and cannot be blank.");
-        }
-
-        Validate validate = new Validate();
-
-        if (!validate.email(createUserDto.email())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The email address is invalid.");
         }
 
         if (createUserDto.password() == null || createUserDto.password().isBlank()) {
@@ -74,3 +68,4 @@ public class UserController {
         }
     }
 }
+
