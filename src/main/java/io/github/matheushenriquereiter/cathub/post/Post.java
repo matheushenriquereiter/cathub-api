@@ -2,6 +2,8 @@ package io.github.matheushenriquereiter.cathub.post;
 
 import io.github.matheushenriquereiter.cathub.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,21 +11,24 @@ import lombok.Setter;
 @Table(name = "posts")
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
-    private String imagePath;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Post() {}
+    public Post() {
+    }
 
     public Post(String description, User user) {
         this.description = description;
         this.user = user;
     }
 }
+

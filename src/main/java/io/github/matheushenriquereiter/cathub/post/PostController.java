@@ -4,7 +4,9 @@ import io.github.matheushenriquereiter.cathub.user.User;
 import io.github.matheushenriquereiter.cathub.user.UserRepository;
 import io.github.matheushenriquereiter.cathub.user.UserResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,34 +26,18 @@ public class PostController {
         this.postsMapper = postsMapper;
     }
 
-    @GetMapping
-    public List<PostResponse> getPost() {
-        List<Post> posts = postsRepository.findAll();
-
-        return posts.stream().map(postsMapper::toResponse).toList();
-    }
-
-    @GetMapping("/{id}")
-    public PostResponse getPostById(@PathVariable Integer id) {
-        Optional<Post> post = postsRepository.findById(id);
-
-        if (post.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Post not exists");
-        }
-
-        return postsMapper.toResponse(post.get());
-    }
-
     @PostMapping
-    public PostResponse insertPost(@RequestBody @Valid PostRequest post) {
-        Optional<User> user = userRepository.findById(post.userId());
+    public ResponseEntity<Void> post(@Valid @RequestBody PostRequest postRequest) {
+        User user = userRepository.findById(postRequest.userId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Post user does not exists");
-        }
+        Post post = Post.builder()
+                .description(postRequest.description())
+                .user(user)
+                .build();
 
-        Post addedPost = postsRepository.save(new Post(post.description(), user.get()));
+        postsRepository.save(post);
 
-        return postsMapper.toResponse(addedPost);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
