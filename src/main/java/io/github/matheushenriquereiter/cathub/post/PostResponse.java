@@ -1,10 +1,9 @@
 package io.github.matheushenriquereiter.cathub.post;
 
-import io.github.matheushenriquereiter.cathub.user.UserResponse;
-
 public record PostResponse(
         Integer id,
-        String description,
-        UserResponse user
-) {}
+        Integer user_id,
+        Integer image_id
+) {
+}
 

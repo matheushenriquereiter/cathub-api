@@ -16,18 +16,21 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     public Post() {
     }
 
-    public Post(String description, User user) {
-        this.description = description;
+    public Post(User user, Image image) {
         this.user = user;
+        this.image = image;
     }
 }
 

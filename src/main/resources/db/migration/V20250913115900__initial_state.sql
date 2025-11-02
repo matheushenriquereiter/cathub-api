@@ -1,23 +1,24 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id       INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    email    VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS posts
-(
     id          INT PRIMARY KEY AUTO_INCREMENT,
-    description VARCHAR(255) NOT NULL,
-    user_id     INT          NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    username    VARCHAR(255) NOT NULL UNIQUE,
+    email       VARCHAR(255) NOT NULL UNIQUE,
+    password    VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS images
 (
-    id  INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255),
-    type VARCHAR(255),
-    image_data LONGBLOB
-)
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    name        VARCHAR(255),
+    type        VARCHAR(255),
+    image_data  LONGBLOB
+    );
+
+CREATE TABLE IF NOT EXISTS posts
+(
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    user_id     INT          NOT NULL,
+    image_id    INT          NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (image_id) REFERENCES images(id)
+);
