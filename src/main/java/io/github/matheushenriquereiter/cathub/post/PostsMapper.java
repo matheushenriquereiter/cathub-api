@@ -1,6 +1,7 @@
 package io.github.matheushenriquereiter.cathub.post;
 
-import io.github.matheushenriquereiter.cathub.user.User;
+import io.github.matheushenriquereiter.cathub.entity.Post;
+import io.github.matheushenriquereiter.cathub.entity.User;
 import io.github.matheushenriquereiter.cathub.user.UserResponse;
 import org.springframework.stereotype.Component;
 

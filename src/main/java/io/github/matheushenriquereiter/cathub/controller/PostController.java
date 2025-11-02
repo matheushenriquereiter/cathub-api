@@ -1,29 +1,28 @@
-package io.github.matheushenriquereiter.cathub.post;
+package io.github.matheushenriquereiter.cathub.controller;
 
-import io.github.matheushenriquereiter.cathub.user.User;
-import io.github.matheushenriquereiter.cathub.user.UserRepository;
-import io.github.matheushenriquereiter.cathub.user.UserResponse;
+import io.github.matheushenriquereiter.cathub.entity.Post;
+import io.github.matheushenriquereiter.cathub.entity.User;
+import io.github.matheushenriquereiter.cathub.post.PostRequest;
+import io.github.matheushenriquereiter.cathub.post.PostsRepository;
+import io.github.matheushenriquereiter.cathub.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("posts")
 public class PostController {
     private final PostsRepository postsRepository;
     private final UserRepository userRepository;
-    private final PostsMapper postsMapper;
 
-    public PostController(PostsRepository postsRepository, UserRepository userRepository, PostsMapper postsMapper) {
+    public PostController(PostsRepository postsRepository, UserRepository userRepository) {
         this.postsRepository = postsRepository;
         this.userRepository = userRepository;
-        this.postsMapper = postsMapper;
     }
 
     @PostMapping

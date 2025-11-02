@@ -1,7 +1,7 @@
 package io.github.matheushenriquereiter.cathub.auth;
 
-import io.github.matheushenriquereiter.cathub.user.User;
-import io.github.matheushenriquereiter.cathub.user.UserRepository;
+import io.github.matheushenriquereiter.cathub.entity.User;
+import io.github.matheushenriquereiter.cathub.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

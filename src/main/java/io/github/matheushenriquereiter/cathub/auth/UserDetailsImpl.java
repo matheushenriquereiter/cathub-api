@@ -1,6 +1,6 @@
 package io.github.matheushenriquereiter.cathub.auth;
 
-import io.github.matheushenriquereiter.cathub.user.User;
+import io.github.matheushenriquereiter.cathub.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

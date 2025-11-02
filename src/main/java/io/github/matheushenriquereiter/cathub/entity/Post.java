@@ -1,6 +1,5 @@
-package io.github.matheushenriquereiter.cathub.post;
+package io.github.matheushenriquereiter.cathub.entity;
 
-import io.github.matheushenriquereiter.cathub.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

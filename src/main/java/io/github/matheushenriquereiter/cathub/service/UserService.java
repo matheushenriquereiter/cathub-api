@@ -1,9 +1,13 @@
-package io.github.matheushenriquereiter.cathub.user;
+package io.github.matheushenriquereiter.cathub.service;
 
 import io.github.matheushenriquereiter.cathub.auth.JwtTokenService;
 import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
 import io.github.matheushenriquereiter.cathub.auth.SecurityConfiguration;
 import io.github.matheushenriquereiter.cathub.auth.UserDetailsImpl;
+import io.github.matheushenriquereiter.cathub.entity.User;
+import io.github.matheushenriquereiter.cathub.repository.UserRepository;
+import io.github.matheushenriquereiter.cathub.user.CreateUserDto;
+import io.github.matheushenriquereiter.cathub.user.LoginUserDto;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

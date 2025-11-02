@@ -1,7 +1,7 @@
 package io.github.matheushenriquereiter.cathub.auth;
 
-import io.github.matheushenriquereiter.cathub.user.User;
-import io.github.matheushenriquereiter.cathub.user.UserRepository;
+import io.github.matheushenriquereiter.cathub.entity.User;
+import io.github.matheushenriquereiter.cathub.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -12,4 +12,12 @@ CREATE TABLE IF NOT EXISTS posts
     description VARCHAR(255) NOT NULL,
     user_id     INT          NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE TABLE IF NOT EXISTS images
+(
+    id  INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255),
+    type VARCHAR(255),
+    image_data LONGBLOB
 )

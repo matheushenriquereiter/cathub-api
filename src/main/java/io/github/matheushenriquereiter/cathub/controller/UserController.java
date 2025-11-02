@@ -1,14 +1,15 @@
-package io.github.matheushenriquereiter.cathub.user;
+package io.github.matheushenriquereiter.cathub.controller;
 
 import io.github.matheushenriquereiter.cathub.auth.RecoveryJwtTokenDto;
+import io.github.matheushenriquereiter.cathub.user.CreateUserDto;
+import io.github.matheushenriquereiter.cathub.user.LoginUserDto;
+import io.github.matheushenriquereiter.cathub.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping
